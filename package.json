@@ -1,0 +1,19 @@
+{
+  "name": "langchain-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node index2.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.27.0",
+  "dependencies": {
+    "@langchain/core": "^1.1.18",
+    "@langchain/ollama": "^1.2.2"
+  }
+}
