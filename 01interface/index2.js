@@ -28,7 +28,7 @@ const prompt = ChatPromptTemplate.fromMessages([
 const res = await prompt.formatMessages({
     input_language: "中文",
     output_language: "英文",
-    input: "你好，世界！"
+    input: "你好，今天天气怎么样？"
 })
 
 const stream = await model.stream(res);

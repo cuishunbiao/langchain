@@ -1,0 +1,19 @@
+{
+  "name": "01",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "packageManager": "pnpm@10.27.0",
+  "dependencies": {
+    "@langchain/core": "^1.1.39",
+    "@langchain/ollama": "^1.2.6",
+    "cosine-similarity": "^1.0.1"
+  }
+}
