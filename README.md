@@ -43,3 +43,4 @@ ollama 相关的操作
 
 nomic-embed-text 是一个“文本向量化模型”（embedding model）
 
+
