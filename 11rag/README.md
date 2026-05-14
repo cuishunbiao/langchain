@@ -1,49 +1,36 @@
-# RAG 实践
-整个项目用来实现 RAG 嵌入，查询，和用户做交互，如果用户的问题和文档相关，利用文档来回答，如果和文档不相关，利用大模型来回答。
-技术使用 langchain，大模型调用使用本地 ollama，涉及到的开发技术参考 /Users/cuishunbiao/study/langchain/ 整个目录里面（包括：嵌入、分割、请求、内存向量库）。
-整个项目应该如何设计架构？使用 next.js 技术。在关键的逻辑位置，把注释写清楚，先出一个架构图，梳理清楚再进行下一步。生成一个 md 文档。
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## 嵌入服务
+## Getting Started
 
-### 文件上传服务
-创建一个文件上传的路由和一个服务。
-#### 文档切割（参考 09vector 目录）
-根据不同的文件类型，使用不用的 Loader 做文档切割；
-- 先提取文件的后缀；
-- 然后通过 loader 加载上传的文档，做文本切割；
-- 嵌入操作，存储到内存的向量库；
-- 创建内存向量库；
-- 将分割后的文档传递到内存向量库；
-- 内存向量库自动做嵌入操作；
-- 对外暴露内存向量库
+First, run the development server:
 
-最终会生成一个 map 映射：
-文件名 -> 文件对应的向量库；
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-### 问题搜索匹配
-创建一个路由。根据用户传过来的原始问题，去匹配数据结果。
-- 获取到用户的问题；
-- 去检索，返回一个检索结果；
-- 可以设置获取多少个相关文档 和 相似度阀值，对搜索的文档进行过滤（利用 vectorstore.similaritySearchWithScore）；
-- 合并所有结果，返回结果；
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## web服务
-创建一个类似于 ChatGPT 的聊天界面，这是一个完整的服务。
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-### 用户聊天
-- 获取用户聊天；
-- 包含历史记录；
-- 根据 Loading 显示模型思考的效果；
-- 发送请求；
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-页面增加一个上传文件的按钮，可以上传本地的文件，到服务器，上传的时候增加进度条，上传完成以后，在 upload 目录里会增加一个文件。
+## Learn More
 
-### API 服务
-- 接收用户输入的问题；
-- 请求嵌入服务，来进行相关文档的检索；
-- 拿到结果，拼接信息，流式输出结果；
+To learn more about Next.js, take a look at the following resources:
 
-### 回答
-- 如果有相关文档，则写一个关于有相关文档的提示词，最终给到一个精准的回复。
-- 如果没有查到相关文档，则自由回复一个精准的回复。
-- 在回复的结果上标记清楚【有相关文档】和【无相关文档】这样的标识，用来提示我。
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
