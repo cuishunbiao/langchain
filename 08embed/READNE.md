@@ -22,3 +22,11 @@ GithubRepoLoader 抓取 Github 资源，使用
 
 
 - SerpAPILoader
+
+
+
+# 
+先切割文本，再做嵌入；
+
+
+# 内存型 - 索引数据库
