@@ -1,9 +1,26 @@
+/**
+ * FileUpload — 文件上传组件
+ *
+ * 功能：
+ *  - 支持 .pdf / .txt / .md 三种文件类型
+ *  - 使用 XMLHttpRequest（而非 fetch）以支持上传进度回调
+ *  - 显示上传进度条（百分比 + 进度条动画）
+ *  - 上传成功后显示已上传文件列表（文件名 + 分块数）
+ *  - 错误提示
+ *
+ * 上传流程：
+ *  1. 用户点击"上传文档"按钮 → 触发隐藏的 <input type="file">
+ *  2. 选择文件后，构造 FormData，通过 XHR POST 到 /api/upload
+ *  3. XHR upload.progress 事件实时更新进度条
+ *  4. 上传成功后，服务端返回 { filename, chunkCount }，追加到已上传列表
+ */
 "use client";
 
 import { useRef, useState } from "react";
 
 interface UploadedFile {
   name: string;
+  /** 文档被分成了多少个文本块 */
   chunkCount: number;
 }
 
@@ -13,6 +30,7 @@ interface FileUploadProps {
 
 export function FileUpload({ onUploaded }: FileUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  // null 表示未在上传，数字表示上传进度百分比
   const [progress, setProgress] = useState<number | null>(null);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -28,16 +46,18 @@ export function FileUpload({ onUploaded }: FileUploadProps) {
     formData.append("file", file);
 
     try {
-      // 使用 XMLHttpRequest 以支持上传进度
+      // 使用 XMLHttpRequest 以支持上传进度（fetch API 不支持 upload progress）
       const result = await new Promise<UploadedFile>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
 
+        // 监听上传进度事件
         xhr.upload.addEventListener("progress", (evt) => {
           if (evt.lengthComputable) {
             setProgress(Math.round((evt.loaded / evt.total) * 100));
           }
         });
 
+        // 上传完成（注意：这里的 load 是整个请求完成，包括服务端处理后的响应）
         xhr.addEventListener("load", () => {
           if (xhr.status >= 200 && xhr.status < 300) {
             resolve(JSON.parse(xhr.responseText));
@@ -66,7 +86,7 @@ export function FileUpload({ onUploaded }: FileUploadProps) {
 
   return (
     <div className="flex flex-col gap-2">
-      {/* 上传按钮 */}
+      {/* 上传触发按钮（点击时触发隐藏的 file input） */}
       <button
         onClick={() => inputRef.current?.click()}
         disabled={progress !== null}
@@ -78,6 +98,7 @@ export function FileUpload({ onUploaded }: FileUploadProps) {
         上传文档
       </button>
 
+      {/* 隐藏的文件选择器，限制接受 .pdf / .txt / .md */}
       <input
         ref={inputRef}
         type="file"
@@ -107,7 +128,7 @@ export function FileUpload({ onUploaded }: FileUploadProps) {
         <p className="text-xs text-red-500">{error}</p>
       )}
 
-      {/* 已上传文件列表 */}
+      {/* 已上传文件列表：显示文件名 + 分块数量 */}
       {uploadedFiles.length > 0 && (
         <div className="flex flex-col gap-1">
           {uploadedFiles.map((f, i) => (

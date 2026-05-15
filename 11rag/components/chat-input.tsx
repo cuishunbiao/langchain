@@ -1,9 +1,20 @@
+/**
+ * ChatInput — 聊天输入框组件
+ *
+ * 功能：
+ *  - 受控 textarea，支持多行输入
+ *  - Enter 键发送消息，Shift+Enter 换行
+ *  - 发送按钮在输入为空或 disabled 时禁用
+ *  - 发送后自动清空输入框
+ */
 "use client";
 
 import { useState, KeyboardEvent } from "react";
 
 interface ChatInputProps {
+  /** 发送消息的回调，参数为去除首尾空格后的文本 */
   onSend: (message: string) => void;
+  /** 禁用状态（如正在等待 AI 回复时） */
   disabled?: boolean;
 }
 
